@@ -46,17 +46,32 @@ $rooms = json_decode(file_get_contents('data/rooms.json'), true);
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>OnlyFuns Hotel Reservation</h1>
+    <div class="navigation">
+        <a href="index.php">Home</a>
+        <a href="view_rooms.php">View Rooms</a>
+        <a href="make_reservation.php">Make Reservation</a>
+        <a href="view_reservations.php">View Reservation</a>
+        <a href="cancel_reservation.php">Cancel Reservation</a>
+        <a href="change_room.php">Change Room</a>
+    </div>
     <div class="container">
-        <h1>View Rooms</h1>
+        <h2>View Rooms</h2>
         <ul>
             <?php foreach ($rooms as $room): ?>
                 <li>
-                    <?php echo htmlspecialchars($room['name']); ?> - 
-                    $<?php echo htmlspecialchars($room['price']); ?> per night - 
-                    Quantity: <?php echo htmlspecialchars($room['quantity']); ?>
-                    [<a href="view_single_room.php?id=<?php echo htmlspecialchars($room['id']); ?>">View</a>]
-                    [<a href="edit_room.php?id=<?php echo htmlspecialchars($room['id']); ?>">Edit</a>]
-                    [<a href="delete_room.php?id=<?php echo htmlspecialchars($room['id']); ?>">Delete</a>]
+                    <div class="room-info">
+                        <h3><?php echo htmlspecialchars($room['name']); ?></h3>
+                        <p>Type: <?php echo htmlspecialchars($room['type']); ?></p>
+                        <p>Price: $<?php echo htmlspecialchars($room['price']); ?> per night</p>
+                        <p>Quantity: <?php echo htmlspecialchars($room['quantity']); ?></p>
+                        <p>Description: <?php echo htmlspecialchars($room['description']); ?></p>
+                    </div>
+                    <div class="room-actions">
+                        <a href="view_single_room.php?id=<?php echo htmlspecialchars($room['id']); ?>">View</a>
+                        <a href="edit_room.php?id=<?php echo htmlspecialchars($room['id']); ?>">Edit</a>
+                        <a href="delete_room.php?id=<?php echo htmlspecialchars($room['id']); ?>">Delete</a>
+                    </div>
                 </li>
             <?php endforeach; ?>
         </ul>
