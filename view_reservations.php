@@ -18,8 +18,8 @@ $reservations = json_decode(file_get_contents('data/reservations.json'), true);
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1> OnlyFuns Hotel Reservation </h1>
-    <div>
+    <h1>OnlyFuns Hotel Reservation</h1>
+    <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
         <a href="make_reservation.php">Make Reservation</a>
@@ -29,17 +29,21 @@ $reservations = json_decode(file_get_contents('data/reservations.json'), true);
     </div>
     <div class="container">
         <h1>Reservation History</h1>
-        <ul>
+        <ul class="reservation-list">
             <?php if (!empty($reservations)): ?>
                 <?php foreach ($reservations as $reservation): ?>
-                    <li>
-                        Reservation ID: <?php echo htmlspecialchars($reservation['id']); ?> - 
-                        Room Type: <?php echo htmlspecialchars($reservation['room_type']); ?> - 
-                        Check-in Date: <?php echo htmlspecialchars($reservation['check_in_date']); ?> - 
-                        Check-out Date: <?php echo htmlspecialchars($reservation['check_out_date']); ?> - 
-                        Total: $<?php echo number_format($reservation['total'], 2); ?>
-                        [<a class="view" href="view_single_reservation.php?id=<?php echo htmlspecialchars($reservation['id']); ?>">View</a>]
-                        [<a class="delete" href="cancel_reservation.php?id=<?php echo htmlspecialchars($reservation['id']); ?>">Cancel</a>]
+                    <li class="reservation-item">
+                        <div class="reservation-details">
+                            <p><strong>Reservation ID:</strong> <?php echo htmlspecialchars($reservation['id']); ?></p>
+                            <p><strong>Room Type:</strong> <?php echo htmlspecialchars($reservation['room_type']); ?></p>
+                            <p><strong>Check-in Date:</strong> <?php echo htmlspecialchars($reservation['check_in_date']); ?></p>
+                            <p><strong>Check-out Date:</strong> <?php echo htmlspecialchars($reservation['check_out_date']); ?></p>
+                            <p><strong>Total:</strong> $<?php echo number_format($reservation['total'], 2); ?></p>
+                        </div>
+                        <div class="reservation-actions">
+                            <a class="button view" href="view_single_reservation.php?id=<?php echo htmlspecialchars($reservation['id']); ?>">View</a>
+                            <a class="button delete" href="cancel_reservation.php?id=<?php echo htmlspecialchars($reservation['id']); ?>">Cancel</a>
+                        </div>
                     </li>
                 <?php endforeach; ?>
             <?php else: ?>
