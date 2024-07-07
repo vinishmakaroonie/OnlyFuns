@@ -11,13 +11,22 @@ if (!file_exists('data/reservations.json')) {
 $reservations = json_decode(file_get_contents('data/reservations.json'), true);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>View Reservations</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1> OnlyFuns Hotel Reservation </h1>
+    <div>
+        <a href="index.php">Home</a>
+        <a href="view_rooms.php">View Rooms</a>
+        <a href="make_reservation.php">Make Reservation</a>
+        <a href="view_reservations.php">View Reservations</a>
+        <a href="cancel_reservation.php">Cancel Reservation</a>
+        <a href="change_room.php">Change Room</a>
+    </div>
     <div class="container">
         <h1>Reservation History</h1>
         <ul>
@@ -26,18 +35,18 @@ $reservations = json_decode(file_get_contents('data/reservations.json'), true);
                     <li>
                         Reservation ID: <?php echo htmlspecialchars($reservation['id']); ?> - 
                         Room Type: <?php echo htmlspecialchars($reservation['room_type']); ?> - 
-                        Check-in Date: <?php echo htmlspecialchars($reservation['checkin_date']); ?> - 
-                        Check-out Date: <?php echo htmlspecialchars($reservation['checkout_date']); ?> - 
-                        Total: $<?php echo htmlspecialchars($reservation['total']); ?>
+                        Check-in Date: <?php echo htmlspecialchars($reservation['check_in_date']); ?> - 
+                        Check-out Date: <?php echo htmlspecialchars($reservation['check_out_date']); ?> - 
+                        Total: $<?php echo number_format($reservation['total'], 2); ?>
                         [<a class="view" href="view_single_reservation.php?id=<?php echo htmlspecialchars($reservation['id']); ?>">View</a>]
                         [<a class="delete" href="cancel_reservation.php?id=<?php echo htmlspecialchars($reservation['id']); ?>">Cancel</a>]
                     </li>
                 <?php endforeach; ?>
             <?php else: ?>
-                <li>No reservations found.</li>
+                <li>No reservations found</li>
             <?php endif; ?>
         </ul>
-        <a href="index.php">Back to Home</a>
+        <a href="index.php" class="button">Back to Home</a>
     </div>
 </body>
 </html>
