@@ -1,0 +1,137 @@
+/* Resetting default margins and paddings */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+/* Centering main content and providing a container */
+.container {
+    width: 60%;
+    margin: auto;
+    text-align: left; /* Adjusted for better readability */
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+/* Styling for headings */
+h1, h2, h3 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Styling for form labels */
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Styling for form inputs */
+input[type="text"],
+input[type="number"],
+textarea,
+input[type="date"],
+input[type="submit"] {
+    width: calc(100% - 24px); /* Adjusting for padding */
+    padding: 12px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Styling for textareas */
+textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+/* Styling for submit button */
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for submit button */
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Styling for navigation links */
+.navigation {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.navigation a {
+    display: inline-block;
+    margin: 10px;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: #333;
+    border: 2px solid #333;
+    border-radius: 30px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover effect for navigation links */
+.navigation a:hover {
+    background-color: #333;
+    color: white;
+}
+
+/* Styling for lists */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Styling for list items */
+li {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect for list items */
+li:hover {
+    transform: translateY(-5px);
+}
+
+/* Styling for general links */
+a {
+    text-decoration: none;
+    color: #4CAF50;
+    margin-left: 10px;
+}
+
+/* Hover effect for general links */
+a:hover {
+    color: #45a049;
+}
+
+/* Additional styles for specific link types */
+a.view {
+    margin-right: 10px;
+}
+
+a.delete {
+    color: #f44336;
+}
+
+a.delete:hover {
+    color: #d32f2f;
+}
