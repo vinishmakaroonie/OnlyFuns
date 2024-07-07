@@ -55,17 +55,18 @@ if (isset($_GET['id'])) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1> OnlyFuns Hotel Reservation </h1>
-    <div>
+    <div class="navigation">
+        <h1>OnlyFuns Hotel Reservation</h1>
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
         <a href="make_reservation.php">Make Reservation</a>
-        <a href="view_reservations.php">View Reservation</a>
+        <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
         <a href="change_room.php">Change Room</a>
     </div>
     <div class="container">
-        <h1>Cancel Reservation</h1>
+        <h1>OnlyFuns Hotel Reservation</h1>
+        <h2>Cancel Reservation</h2>
         <p><?php echo $message; ?></p>
         <a href="view_reservations.php" class="button">Back to Reservations</a>
         <a href="index.php" class="button">Home</a>
