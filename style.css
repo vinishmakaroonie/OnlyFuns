@@ -1,4 +1,4 @@
-/* Resetting default margins and paddings */
+
 body {
     margin: 0;
     padding: 0;
@@ -7,11 +7,11 @@ body {
     text-align: center;
 }
 
-/* Centering main content and providing a container */
+
 .container {
     width: 60%;
     margin: auto;
-    text-align: left; /* Adjusted for better readability */
+    text-align: center;
     background-color: #fff;
     border-radius: 8px;
     padding: 40px;
@@ -19,20 +19,17 @@ body {
     margin-top: 30px;
 }
 
-/* Styling for headings */
-h1, h2, h3 {
+h1 {
     color: #333;
     margin-bottom: 20px;
 }
 
-/* Styling for form labels */
 label {
     display: block;
     margin-top: 10px;
     font-weight: bold;
 }
 
-/* Styling for form inputs */
 input[type="text"],
 input[type="number"],
 textarea,
@@ -60,6 +57,8 @@ input[type="submit"] {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    padding: 12px 20px;
+    border-radius: 6px;
 }
 
 /* Hover effect for submit button */
@@ -90,48 +89,46 @@ input[type="submit"]:hover {
     color: white;
 }
 
-/* Styling for lists */
-ul {
-    list-style-type: none;
-    padding: 0;
+/* Additional specific styles for the reservation form */
+.reservation-form {
+    margin-top: 30px;
 }
 
-/* Styling for list items */
-li {
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: transform 0.3s ease;
+.reservation-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
 }
 
-/* Hover effect for list items */
-li:hover {
-    transform: translateY(-5px);
+.reservation-form input[type="text"],
+.reservation-form input[type="date"],
+.reservation-form input[type="number"],
+.reservation-form textarea {
+    width: calc(100% - 24px); /* Adjusting for padding */
+    padding: 12px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    resize: vertical; /* Only textarea should resize vertically */
 }
 
-/* Styling for general links */
-a {
-    text-decoration: none;
-    color: #4CAF50;
-    margin-left: 10px;
+.reservation-form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 6px;
+    transition: background-color 0.3s;
 }
 
-/* Hover effect for general links */
-a:hover {
-    color: #45a049;
+.reservation-form input[type="submit"]:hover {
+    background-color: #45a049;
 }
 
-/* Additional styles for specific link types */
-a.view {
-    margin-right: 10px;
-}
-
-a.delete {
-    color: #f44336;
-}
-
-a.delete:hover {
-    color: #d32f2f;
+.reservation-result {
+    text-align: center;
+    margin-top: 20px;
 }
