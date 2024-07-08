@@ -1,111 +1,85 @@
 <?php
-// Ensure the 'data' directory and 'reservations.json', 'rooms.json' files exist
-if (!is_dir('data')) {
-    mkdir('data', 0777, true);
-}
-if (!file_exists('data/reservations.json')) {
-    file_put_contents('data/reservations.json', json_encode([]));
-}
-if (!file_exists('data/rooms.json')) {
-    file_put_contents('data/rooms.json', json_encode([]));
+// Ensure the 'data' directory and 'reservations.json' file exist
+$dataDir = 'data';
+$reservationsFile = $dataDir . '/reservations.json';
+
+if (!is_dir($dataDir)) {
+    mkdir($dataDir, 0777, true);
 }
 
-// Function to get room details by ID
-function getRoomById($id) {
-    $rooms = json_decode(file_get_contents('data/rooms.json'), true);
-    foreach ($rooms as $room) {
-        if ($room['id'] == $id) {
-            return $room;
-        }
-    }
-    return null;
+if (!file_exists($reservationsFile)) {
+    file_put_contents($reservationsFile, json_encode([]));
 }
 
-// Process room change
+// Read reservations data
+$reservations = json_decode(file_get_contents($reservationsFile), true);
+
+// Check if a reservation ID is provided for cancellation
 $message = '';
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $reservationId = $_POST['reservation_id'];
-    $newRoomId = $_POST['room_id'];
-    
-    $room = getRoomById($newRoomId);
-    
-    if ($room) {
-        if ($room['availability'] == 0) {
-            $message = "Selected room is not available.";
-        } else {
-            // Update room availability
-            $room['availability'] -= 1;
-            $rooms = json_decode(file_get_contents('data/rooms.json'), true);
-            foreach ($rooms as &$r) {
-                if ($r['id'] == $room['id']) {
-                    $r['availability'] = $room['availability'];
-                    break;
-                }
-            }
-            file_put_contents('data/rooms.json', json_encode($rooms));
+if (isset($_GET['id'])) {
+    $reservationId = $_GET['id'];
 
-            // Update reservation with new room details
-            $reservations = json_decode(file_get_contents('data/reservations.json'), true);
-            foreach ($reservations as &$reservation) {
-                if ($reservation['id'] == $reservationId) {
-                    $reservation['room_id'] = $newRoomId;
-                    break;
-                }
+    // Validate or sanitize $reservationId if needed
+    $found = false;
+    foreach ($reservations as $index => $reservation) {
+        if ($reservation['id'] == $reservationId) {
+            // Calculate penalty based on cancellation date
+            $reservationDate = strtotime($reservation['check_in_date']);
+            $currentDate = time();
+            $daysDifference = floor(($reservationDate - $currentDate) / (60 * 60 * 24));
+
+            if ($daysDifference >= 5) {
+                $penalty = 0.10 * $reservation['room_rate'];
+            } elseif ($daysDifference >= 4) {
+                $penalty = 0.15 * $reservation['room_rate'];
+            } elseif ($daysDifference >= 2) {
+                $penalty = 0.20 * $reservation['room_rate'];
+            } else {
+                $penalty = 0.0;
             }
-            file_put_contents('data/reservations.json', json_encode($reservations));
-            
-            $message = "Room change successful!";
+
+            // Remove the reservation from the array
+            unset($reservations[$index]);
+
+            // Write updated reservations data back to the file
+            file_put_contents($reservationsFile, json_encode(array_values($reservations)));
+
+            // Display cancellation confirmation with penalty
+            $message = "Reservation cancelled successfully. Penalty: $" . number_format($penalty, 2);
+            $found = true;
+            break;
         }
-    } else {
-        $message = "Room not found!";
     }
-}
 
-// Display reservations and available rooms
-$reservations = json_decode(file_get_contents('data/reservations.json'), true);
-$rooms = json_decode(file_get_contents('data/rooms.json'), true);
+    if (!$found) {
+        $message = "Reservation not found.";
+    }
+} else {
+    $message = "No reservation ID provided for cancellation.";
+}
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Room</title>
+    <title>Cancel Reservation</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>OnlyFuns Hotel Reservation</h1>
     <div class="navigation">
+        <h1>OnlyFuns Hotel Reservation</h1>
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
         <a href="make_reservation.php">Make Reservation</a>
-        <a href="view_reservations.php">View Reservation</a>
+        <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
         <a href="change_room.php">Change Room</a>
     </div>
     <div class="container">
-        <h2>Change Room</h2>
-        <?php if (!empty($message)): ?>
-            <p><?php echo htmlspecialchars($message); ?></p>
-        <?php endif; ?>
-        <form method="POST">
-            <label for="reservation_id">Select Reservation:</label>
-            <select name="reservation_id" id="reservation_id" required>
-                <?php foreach ($reservations as $reservation): ?>
-                    <option value="<?php echo htmlspecialchars($reservation['id']); ?>">
-                        Reservation ID: <?php echo htmlspecialchars($reservation['id']); ?> - Current Room: <?php echo htmlspecialchars($reservation['room_id']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
-            <label for="room_id">Select New Room:</label>
-            <select name="room_id" id="room_id" required>
-                <?php foreach ($rooms as $room): ?>
-                    <option value="<?php echo htmlspecialchars($room['id']); ?>"><?php echo htmlspecialchars($room['name']); ?> (<?php echo htmlspecialchars($room['availability']); ?> available)</option>
-                <?php endforeach; ?>
-            </select><br>
-            <button type="submit">Confirm Room Change</button>
-        </form>
-        <a href="view_reservations.php">Back to Reservations</a>
+        <h2>Cancel Reservation</h2>
+        <p><?php echo htmlspecialchars($message); ?></p>
+        <a href="view_reservations.php" class="button">Back to Reservations</a>
+        <a href="index.php" class="button">Home</a>
     </div>
 </body>
 </html>
