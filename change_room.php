@@ -22,6 +22,7 @@ function getRoomById($id) {
 }
 
 // Process room change
+$message = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $reservationId = $_POST['reservation_id'];
     $newRoomId = $_POST['room_id'];
@@ -67,6 +68,8 @@ $rooms = json_decode(file_get_contents('data/rooms.json'), true);
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Room</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -82,7 +85,7 @@ $rooms = json_decode(file_get_contents('data/rooms.json'), true);
     </div>
     <div class="container">
         <h2>Change Room</h2>
-        <?php if (isset($message)): ?>
+        <?php if (!empty($message)): ?>
             <p><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
         <form method="POST">
