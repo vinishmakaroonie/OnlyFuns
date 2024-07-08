@@ -1,3 +1,67 @@
+<?php
+session_start();
+
+// Function to generate transaction ID
+function generateTransactionID($customerName, $checkInDate, $roomType) {
+    $shortCustomerName = strtoupper(substr($customerName, 0, 2));
+    $month = strtoupper(date('M', strtotime($checkInDate)));
+    $day = date('d', strtotime($checkInDate));
+    $year = date('Y', strtotime($checkInDate));
+    $roomTypeCode = strtoupper(substr($roomType, 0, 3));
+
+    // Example format: THFEB100222-FIC00001
+    return "{$shortCustomerName}{$month}{$day}{$year}-{$roomTypeCode}00001"; // Replace with actual logic
+}
+
+// Initialize reservation saved status
+$reservationSaved = false;
+$message = '';
+
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize and retrieve form data
+    $customerName = htmlspecialchars($_POST['customer_name']);
+    $checkInDate = htmlspecialchars($_POST['check_in_date']);
+    $checkOutDate = htmlspecialchars($_POST['check_out_date']);
+    $roomType = htmlspecialchars($_POST['room_type']);
+    $adults = (int)$_POST['adults'];
+    $children = (int)$_POST['children'];
+
+    // Generate transaction ID
+    $transactionID = generateTransactionID($customerName, $checkInDate, $roomType);
+
+    // Calculate total cost (for simplicity, using a fixed rate per room type)
+    $roomPrices = [
+        'Single' => 100,
+        'Double' => 150,
+        'Suite' => 200,
+        'Deluxe' => 250,
+        'Presidential' => 500,
+    ];
+    $total = $roomPrices[$roomType] * (strtotime($checkOutDate) - strtotime($checkInDate)) / (60 * 60 * 24);
+
+    // Save reservation to session
+    $newReservation = [
+        'customer_name' => $customerName,
+        'check_in_date' => $checkInDate,
+        'check_out_date' => $checkOutDate,
+        'room_type' => $roomType,
+        'adults' => $adults,
+        'children' => $children,
+        'total' => $total,
+        'transaction_id' => $transactionID
+    ];
+
+    if (!isset($_SESSION['reservations'])) {
+        $_SESSION['reservations'] = [];
+    }
+    $_SESSION['reservations'][] = $newReservation;
+
+    $reservationSaved = true;
+    $message = "Reservation confirmed! Transaction ID: $transactionID";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +94,13 @@
                 <input type="date" id="check_out_date" name="check_out_date" required>
 
                 <label for="room_type">Room Type:</label>
-                <input type="text" id="room_type" name="room_type" required>
+                <select id="room_type" name="room_type" required>
+                    <option value="Single">Single</option>
+                    <option value="Double">Double</option>
+                    <option value="Suite">Suite</option>
+                    <option value="Deluxe">Deluxe</option>
+                    <option value="Presidential">Presidential</option>
+                </select>
 
                 <label for="adults">Number of Adults:</label>
                 <input type="number" id="adults" name="adults" required>
@@ -42,19 +112,12 @@
             </form>
         </div>
 
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Handle form submission here as per your existing PHP logic
-            // Display reservation result or error message
-            // Example output:
-            if (isset($message)) {
-                echo "<div class='reservation-result'>";
-                echo "<h2>Reservation Status</h2>";
-                echo "<p>$message</p>";
-                echo "</div>";
-            }
-        }
-        ?>
+        <?php if ($reservationSaved): ?>
+            <div class="reservation-result">
+                <h2>Reservation Status</h2>
+                <p><?php echo $message; ?></p>
+            </div>
+        <?php endif; ?>
     </div>
 
     <a href="index.php">Go Back</a>
