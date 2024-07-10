@@ -44,8 +44,8 @@ $conn->close();
     <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
-        <a href="make_reservation.php">Make Reservation</a>
         <a href="view_reservations.php">View Reservations</a>
+        <a href="cancel_reservation.php">Cancel Reservation</a>
     </div>
 
     <div class="container">
