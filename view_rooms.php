@@ -1,6 +1,34 @@
 <?php
 session_start();
 
+include 'db.php';
+
+$message = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['reservation_id'])) {
+        $reservation_id = $_POST['reservation_id'];
+        
+        // Sanitize input to prevent SQL injection
+        $reservation_id = intval($reservation_id);
+
+        $sql = "DELETE FROM reservations WHERE id = $reservation_id";
+
+        if ($conn->query($sql) === TRUE) {
+            $message = "Reservation canceled successfully.";
+        } else {
+            $message = "Error canceling reservation: " . $conn->error;
+        }
+    } else {
+        $message = "Reservation ID not provided.";
+    }
+}
+
+$sql = "SELECT * FROM reservations";
+$result = $conn->query($sql);
+
+$conn->close();
+
 // Define a RoomType class to encapsulate room type information
 class RoomType {
     public const SINGLE = 'Single';
@@ -30,36 +58,36 @@ class RoomType {
 
 // Simulated rooms data array with individual room IDs
 $rooms = [
-    ['id' => 'room1', 'name' => 'Room 1', 'type' => RoomType::SINGLE, 'price' => 100],
-    ['id' => 'room2', 'name' => 'Room 2', 'type' => RoomType::DOUBLE, 'price' => 150],
-    ['id' => 'room3', 'name' => 'Room 3', 'type' => RoomType::SUITE, 'price' => 300],
-    ['id' => 'room4', 'name' => 'Room 4', 'type' => RoomType::DELUXE, 'price' => 400],
-    ['id' => 'room5', 'name' => 'Room 5', 'type' => RoomType::PRESIDENTIAL, 'price' => 800],
-    ['id' => 'room6', 'name' => 'Room 6', 'type' => RoomType::SINGLE, 'price' => 100],
-    ['id' => 'room7', 'name' => 'Room 7', 'type' => RoomType::DOUBLE, 'price' => 150],
-    ['id' => 'room8', 'name' => 'Room 8', 'type' => RoomType::SUITE, 'price' => 300],
-    ['id' => 'room9', 'name' => 'Room 9', 'type' => RoomType::DELUXE, 'price' => 400],
-    ['id' => 'room10', 'name' => 'Room 10', 'type' => RoomType::PRESIDENTIAL, 'price' => 800],
-    ['id' => 'room11', 'name' => 'Room 11', 'type' => RoomType::SINGLE, 'price' => 100],
-    ['id' => 'room12', 'name' => 'Room 12', 'type' => RoomType::DOUBLE, 'price' => 150],
-    ['id' => 'room13', 'name' => 'Room 13', 'type' => RoomType::SUITE, 'price' => 300],
-    ['id' => 'room14', 'name' => 'Room 14', 'type' => RoomType::DELUXE, 'price' => 400],
-    ['id' => 'room15', 'name' => 'Room 15', 'type' => RoomType::PRESIDENTIAL, 'price' => 800],
-    ['id' => 'room16', 'name' => 'Room 16', 'type' => RoomType::SINGLE, 'price' => 100],
-    ['id' => 'room17', 'name' => 'Room 17', 'type' => RoomType::DOUBLE, 'price' => 150],
-    ['id' => 'room18', 'name' => 'Room 18', 'type' => RoomType::SUITE, 'price' => 300],
-    ['id' => 'room19', 'name' => 'Room 19', 'type' => RoomType::DELUXE, 'price' => 400],
-    ['id' => 'room20', 'name' => 'Room 20', 'type' => RoomType::PRESIDENTIAL, 'price' => 800],
-    ['id' => 'room21', 'name' => 'Room 21', 'type' => RoomType::SINGLE, 'price' => 100],
-    ['id' => 'room22', 'name' => 'Room 22', 'type' => RoomType::DOUBLE, 'price' => 150],
-    ['id' => 'room23', 'name' => 'Room 23', 'type' => RoomType::SUITE, 'price' => 300],
-    ['id' => 'room24', 'name' => 'Room 24', 'type' => RoomType::DELUXE, 'price' => 400],
-    ['id' => 'room25', 'name' => 'Room 25', 'type' => RoomType::PRESIDENTIAL, 'price' => 800],
-    ['id' => 'room26', 'name' => 'Room 26', 'type' => RoomType::SINGLE, 'price' => 100],
-    ['id' => 'room27', 'name' => 'Room 27', 'type' => RoomType::DOUBLE, 'price' => 150],
-    ['id' => 'room28', 'name' => 'Room 28', 'type' => RoomType::SUITE, 'price' => 300],
-    ['id' => 'room29', 'name' => 'Room 29', 'type' => RoomType::DELUXE, 'price' => 400],
-    ['id' => 'room30', 'name' => 'Room 30', 'type' => RoomType::PRESIDENTIAL, 'price' => 800],
+    ['id' => 'room1', 'name' => 'Room 1', 'type' => RoomType::SINGLE, 'price' => 100, 'image_url' => 'images/room1.jpg'],
+    ['id' => 'room2', 'name' => 'Room 2', 'type' => RoomType::DOUBLE, 'price' => 150, 'image_url' => 'images/room2.jpg'],
+    ['id' => 'room3', 'name' => 'Room 3', 'type' => RoomType::SUITE, 'price' => 300, 'image_url' => 'images/room3.jpg'],
+    ['id' => 'room4', 'name' => 'Room 4', 'type' => RoomType::DELUXE, 'price' => 400, 'image_url' => 'images/room4.jpg'],
+    ['id' => 'room5', 'name' => 'Room 5', 'type' => RoomType::PRESIDENTIAL, 'price' => 800, 'image_url' => 'images/room5.jpg'],
+    ['id' => 'room6', 'name' => 'Room 6', 'type' => RoomType::SINGLE, 'price' => 100, 'image_url' => 'images/room6.jpg'],
+    ['id' => 'room7', 'name' => 'Room 7', 'type' => RoomType::DOUBLE, 'price' => 150, 'image_url' => 'images/room7.jpg'],
+    ['id' => 'room8', 'name' => 'Room 8', 'type' => RoomType::SUITE, 'price' => 300, 'image_url' => 'images/room8.jpg'],
+    ['id' => 'room9', 'name' => 'Room 9', 'type' => RoomType::DELUXE, 'price' => 400, 'image_url' => 'images/room9.jpg'],
+    ['id' => 'room10', 'name' => 'Room 10', 'type' => RoomType::PRESIDENTIAL, 'price' => 800, 'image_url' => 'images/room10.jpg'],
+    ['id' => 'room11', 'name' => 'Room 11', 'type' => RoomType::SINGLE, 'price' => 100, 'image_url' => 'images/room11.jpg'],
+    ['id' => 'room12', 'name' => 'Room 12', 'type' => RoomType::DOUBLE, 'price' => 150, 'image_url' => 'images/room12.jpg'],
+    ['id' => 'room13', 'name' => 'Room 13', 'type' => RoomType::SUITE, 'price' => 300, 'image_url' => 'images/room13.jpg'],
+    ['id' => 'room14', 'name' => 'Room 14', 'type' => RoomType::DELUXE, 'price' => 400, 'image_url' => 'images/room14.jpg'],
+    ['id' => 'room15', 'name' => 'Room 15', 'type' => RoomType::PRESIDENTIAL, 'price' => 800, 'image_url' => 'images/room15.jpg'],
+    ['id' => 'room16', 'name' => 'Room 16', 'type' => RoomType::SINGLE, 'price' => 100, 'image_url' => 'images/room16.jpg'],
+    ['id' => 'room17', 'name' => 'Room 17', 'type' => RoomType::DOUBLE, 'price' => 150, 'image_url' => 'images/room17.jpg'],
+    ['id' => 'room18', 'name' => 'Room 18', 'type' => RoomType::SUITE, 'price' => 300, 'image_url' => 'images/room18.jpg'],
+    ['id' => 'room19', 'name' => 'Room 19', 'type' => RoomType::DELUXE, 'price' => 400, 'image_url' => 'images/room19.jpg'],
+    ['id' => 'room20', 'name' => 'Room 20', 'type' => RoomType::PRESIDENTIAL, 'price' => 800, 'image_url' => 'images/room20.jpg'],
+    ['id' => 'room21', 'name' => 'Room 21', 'type' => RoomType::SINGLE, 'price' => 100, 'image_url' => 'images/room21.jpg'],
+    ['id' => 'room22', 'name' => 'Room 22', 'type' => RoomType::DOUBLE, 'price' => 150, 'image_url' => 'images/room22.jpg'],
+    ['id' => 'room23', 'name' => 'Room 23', 'type' => RoomType::SUITE, 'price' => 300, 'image_url' => 'images/room23.jpg'],
+    ['id' => 'room24', 'name' => 'Room 24', 'type' => RoomType::DELUXE, 'price' => 400, 'image_url' => 'images/room24.jpg'],
+    ['id' => 'room25', 'name' => 'Room 25', 'type' => RoomType::PRESIDENTIAL, 'price' => 800, 'image_url' => 'images/room25.jpg'],
+    ['id' => 'room26', 'name' => 'Room 26', 'type' => RoomType::SINGLE, 'price' => 100, 'image_url' => 'images/room26.jpg'],
+    ['id' => 'room27', 'name' => 'Room 27', 'type' => RoomType::DOUBLE, 'price' => 150, 'image_url' => 'images/room27.jpg'],
+    ['id' => 'room28', 'name' => 'Room 28', 'type' => RoomType::SUITE, 'price' => 300, 'image_url' => 'images/room28.jpg'],
+    ['id' => 'room29', 'name' => 'Room 29', 'type' => RoomType::DELUXE, 'price' => 400, 'image_url' => 'images/room29.jpg'],
+    ['id' => 'room30', 'name' => 'Room 30', 'type' => RoomType::PRESIDENTIAL, 'price' => 800, 'image_url' => 'images/room30.jpg'],
 ];
 
 // Retrieve reservations from session, initialize to empty array if not set
@@ -95,7 +123,7 @@ function isRoomAvailable($roomId, $checkInDate, $checkOutDate) {
 <head>
     <meta charset="UTF-8">
     <title>View Rooms</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="view_rooms.css">
 </head>
 <body>
     <h1>OnlyFuns Hotel Reservation</h1>
@@ -104,7 +132,6 @@ function isRoomAvailable($roomId, $checkInDate, $checkOutDate) {
         <a href="view_rooms.php">View Rooms</a>
         <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
-        <a href="change_room.php">Change Room</a>
     </div>
     <div class="room-descriptions">
         <h2>Room Types and Descriptions</h2>
@@ -130,13 +157,14 @@ function isRoomAvailable($roomId, $checkInDate, $checkOutDate) {
                 <div class="room">
                     <div class="room-details">
                         <h3><?php echo $roomName; ?></h3>
+                        <img src="<?php echo htmlspecialchars($room['image_url']); ?>" alt="<?php echo htmlspecialchars($room['name']); ?>" class="room-image">
                         <p>Type: <?php echo $roomType; ?></p>
                         <p>Price: $<?php echo $roomPrice; ?> per night</p>
                         <?php
                             // Check if room is already reserved
                             $isReserved = false;
                             foreach ($reservations as $reservation) {
-                                if ($reservation['room_name'] === $roomName) {
+                                if (isset($reservation['room_name']) && $reservation['room_name'] === $roomName) {
                                     $isReserved = true;
                                     break;
                                 }
