@@ -4,7 +4,7 @@ session_start();
 // Retrieve reservations from session
 $reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [];
 
-// Function to calculate total cost based on room price, adults, and children
+// Example function to calculate total cost based on room price, adults, and children
 function calculateTotalCost($roomPrice, $checkInDate, $checkOutDate, $adults, $children) {
     // Calculate number of days of stay
     $days = (strtotime($checkOutDate) - strtotime($checkInDate)) / (60 * 60 * 24);
@@ -37,13 +37,15 @@ if (isset($_GET['transaction_id'])) {
         // Handle form submission to update reservation
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Update reservation details
+            $reservation['customer_name'] = htmlspecialchars($_POST['customer_name']);
             $reservation['check_in_date'] = htmlspecialchars($_POST['check_in_date']);
             $reservation['check_out_date'] = htmlspecialchars($_POST['check_out_date']);
             $reservation['adults'] = (int)$_POST['adults'];
             $reservation['children'] = (int)$_POST['children'];
+            $reservation['room_id'] = htmlspecialchars($_POST['room_id']);
 
             // Calculate updated total cost
-            $roomPrice = $reservation['room_price'];
+            $roomPrice = $reservation['room_price']; // Assuming you have room_price stored in $reservation
             $checkInDate = $reservation['check_in_date'];
             $checkOutDate = $reservation['check_out_date'];
             $adults = $reservation['adults'];
@@ -77,7 +79,6 @@ if (isset($_GET['transaction_id'])) {
     exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,18 +140,37 @@ if (isset($_GET['transaction_id'])) {
         <h2>Edit Reservation Details</h2>
         <form action="" method="post">
             <input type="hidden" name="transaction_id" value="<?php echo htmlspecialchars($reservation['transaction_id']); ?>">
+            
+            <label for="customer_name">Customer Name:</label>
+            <input type="text" id="customer_name" name="customer_name" value="<?php echo htmlspecialchars($reservation['customer_name']); ?>" required>
+            <br><br>
+
             <label for="check_in_date">Check-in Date:</label>
             <input type="date" id="check_in_date" name="check_in_date" value="<?php echo htmlspecialchars($reservation['check_in_date']); ?>" required>
             <br><br>
+            
             <label for="check_out_date">Check-out Date:</label>
             <input type="date" id="check_out_date" name="check_out_date" value="<?php echo htmlspecialchars($reservation['check_out_date']); ?>" required>
             <br><br>
+            
             <label for="adults">Adults:</label>
             <input type="number" id="adults" name="adults" value="<?php echo htmlspecialchars($reservation['adults']); ?>" required>
             <br><br>
+            
             <label for="children">Children:</label>
             <input type="number" id="children" name="children" value="<?php echo htmlspecialchars($reservation['children']); ?>" required>
             <br><br>
+            
+            <label for="room_id">Room:</label>
+            <select id="room_id" name="room_id" required>
+                <?php foreach ($rooms as $room): ?>
+                    <option value="<?php echo htmlspecialchars($room['id']); ?>" <?php if ($room['id'] == $reservation['room_id']) echo 'selected'; ?>>
+                        <?php echo htmlspecialchars($room['name']); ?> - <?php echo htmlspecialchars($room['type']); ?> ($<?php echo htmlspecialchars($room['price']); ?> per night)
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <br><br>
+            
             <button type="submit" class="button">Update Reservation</button>
         </form>
         <div id="total"></div>
