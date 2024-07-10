@@ -1,48 +1,63 @@
 <?php
-session_start();
-$reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [];
+include 'db.php';
+
+$sql = "SELECT * FROM reservations";
+$result = $conn->query($sql);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Reservations</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="view_reservations.css">
 </head>
 <body>
-    <h1>OnlyFuns Hotel Reservation</h1>
+    <h1>View Reservations</h1>
     <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
-        <a href="view_reservations.php">View Reservations</a>
+        <a href="make_reservation.php">Make Reservation</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
-        <a href="change_room.php">Change Room</a>
     </div>
+
     <div class="container">
-        <h2>Reservation History</h2>
-        <ul class="reservation-list">
-            <?php if (!empty($reservations)): ?>
-                <?php foreach ($reservations as $reservation): ?>
-                    <li class="reservation-item">
-                        <div class="reservation-details">
-                            <p><strong>Reservation ID:</strong> <?php echo htmlspecialchars($reservation['transaction_id']); ?></p>
-                            <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($reservation['customer_name']); ?></p>
-                            <p><strong>Room Number:</strong> <?php echo htmlspecialchars($reservation['room_name']); ?></p>
-                            <p><strong>Room Type:</strong> <?php echo htmlspecialchars($reservation['room_type']); ?></p>
-                            <p><strong>Check-in Date:</strong> <?php echo htmlspecialchars($reservation['check_in_date']); ?></p>
-                            <p><strong>Check-out Date:</strong> <?php echo htmlspecialchars($reservation['check_out_date']); ?></p>
-                            <p><strong>Total:</strong> $<?php echo number_format($reservation['total'], 2); ?></p>
-                            <p><strong>Adults:</strong> <?php echo htmlspecialchars($reservation['adults']); ?></p>
-                            <p><strong>Children:</strong> <?php echo htmlspecialchars($reservation['children']); ?></p>
-                            <a href="edit_reservation.php?transaction_id=<?php echo htmlspecialchars($reservation['transaction_id']); ?>" class="button">Edit</a>
-                        </div>
-                    </li>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <li>No reservations found</li>
-            <?php endif; ?>
-        </ul>
-        <a href="index.php" class="button">Back to Home</a>
+        <?php if ($result->num_rows > 0): ?>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer Name</th>
+                    <th>Check-in Date</th>
+                    <th>Check-out Date</th>
+                    <th>Room Name</th>
+                    <th>Room Type</th>
+                    <th>Room Price</th>
+                    <th>Adults</th>
+                    <th>Children</th>
+                </tr>
+                <?php while($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo $row['id']; ?></td>
+                        <td><?php echo $row['customer_name']; ?></td>
+                        <td><?php echo $row['check_in_date']; ?></td>
+                        <td><?php echo $row['check_out_date']; ?></td>
+                        <td><?php echo $row['room_name']; ?></td>
+                        <td><?php echo $row['room_type']; ?></td>
+                        <td><?php echo $row['room_price']; ?></td>
+                        <td><?php echo $row['adults']; ?></td>
+                        <td><?php echo $row['children']; ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </table>
+        <?php else: ?>
+            <p>No reservations found.</p>
+        <?php endif; ?>
     </div>
 </body>
 </html>
+
+<?php
+$conn->close();
+?>
