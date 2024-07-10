@@ -1,4 +1,32 @@
 <?php
+include 'db.php';
+
+$message = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['reservation_id'])) {
+        $reservation_id = $_POST['reservation_id'];
+        
+        // Sanitize input to prevent SQL injection
+        $reservation_id = intval($reservation_id);
+
+        $sql = "DELETE FROM reservations WHERE id = $reservation_id";
+
+        if ($conn->query($sql) === TRUE) {
+            $message = "Reservation canceled successfully.";
+        } else {
+            $message = "Error canceling reservation: " . $conn->error;
+        }
+    } else {
+        $message = "Reservation ID not provided.";
+    }
+}
+
+$sql = "SELECT * FROM reservations";
+$result = $conn->query($sql);
+
+$conn->close();
+
 // Ensure the 'data' directory and 'reservations.json', 'rooms.json' files exist
 if (!is_dir('data')) {
     mkdir('data', 0777, true);
@@ -71,17 +99,15 @@ $rooms = json_decode(file_get_contents('data/rooms.json'), true);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Room</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="change_room.css">
 </head>
 <body>
     <h1>OnlyFuns Hotel Reservation</h1>
     <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
-        <a href="make_reservation.php">Make Reservation</a>
         <a href="view_reservations.php">View Reservation</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
-        <a href="change_room.php">Change Room</a>
     </div>
     <div class="container">
         <h2>Change Room</h2>
@@ -105,7 +131,8 @@ $rooms = json_decode(file_get_contents('data/rooms.json'), true);
             </select><br>
             <button type="submit">Confirm Room Change</button>
         </form>
-        <a href="view_reservations.php">Back to Reservations</a>
+        <a href="view_reservations.php" class="back-button">Back to Reservations</a>
     </div>
 </body>
 </html>
+
