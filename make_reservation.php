@@ -4,6 +4,31 @@ include 'db.php';
 $reservationSaved = false;
 $message = '';
 
+function calculateTotalCost($check_in_date, $check_out_date, $room_price, $adults, $children) {
+    $checkIn = new DateTime($check_in_date);
+    $checkOut = new DateTime($check_out_date);
+    $diff = $checkIn->diff($checkOut);
+    $numOfDays = $diff->days;
+    
+    // Base cost calculation
+    $baseCost = $room_price * $numOfDays;
+    
+    // Additional fee calculation
+    $feePerHead = 10;
+    $additionalFee = ($adults + $children) * $feePerHead;
+    
+    // Total cost calculation
+    $totalCost = $baseCost + $additionalFee;
+    
+    // Apply discount if applicable
+    if ($children > 0) {
+        $discountPercentage = 10;
+        $discountAmount = $totalCost * ($discountPercentage / 100);
+        $totalCost -= $discountAmount;
+    }
+    return $totalCost;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $customer_name = $_POST['customer_name'];
     $check_in_date = $_POST['check_in_date'];
@@ -14,8 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $adults = $_POST['adults'];
     $children = $_POST['children'];
 
-    $sql = "INSERT INTO reservations (customer_name, check_in_date, check_out_date, room_name, room_type, room_price, adults, children)
-            VALUES ('$customer_name', '$check_in_date', '$check_out_date', '$room_name', '$room_type', '$room_price', '$adults', '$children')";
+    // Calculate total cost with any applicable discounts
+    $total_cost = calculateTotalCost($check_in_date, $check_out_date, $room_price, $adults, $children);
+
+    $sql = "INSERT INTO reservations (customer_name, check_in_date, check_out_date, room_name, room_type, room_price, adults, children, total_cost)
+            VALUES ('$customer_name', '$check_in_date', '$check_out_date', '$room_name', '$room_type', '$room_price', '$adults', '$children', '$total_cost')";
 
     if ($conn->query($sql) === TRUE) {
         $reservationSaved = true;
@@ -28,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,19 +66,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="make_reservation.css">
     <script>
     function calculateTotal() {
-        const checkInDate = document.getElementById('check_in_date').value;
-        const checkOutDate = document.getElementById('check_out_date').value;
+        const checkInDate = new Date(document.getElementById('check_in_date').value);
+        const checkOutDate = new Date(document.getElementById('check_out_date').value);
         const roomPrice = parseFloat(document.getElementById('room_price').value);
 
-        if (checkInDate && checkOutDate && !isNaN(roomPrice)) {
-            const checkIn = new Date(checkInDate);
-            const checkOut = new Date(checkOutDate);
-            const diffTime = Math.abs(checkOut - checkIn);
+        if (!isNaN(checkInDate) && !isNaN(checkOutDate) && !isNaN(roomPrice)) {
+            const diffTime = Math.abs(checkOutDate - checkInDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             let totalBaseCost = roomPrice * diffDays;
 
-            const children = parseInt(document.getElementById('children').value);
-            const adults = parseInt(document.getElementById('adults').value);
+            const children = parseInt(document.getElementById('children').value) || 0;
+            const adults = parseInt(document.getElementById('adults').value) || 0;
 
             const feePerHead = 10;
             const totalAdditionalFee = (children + adults) * feePerHead;
