@@ -19,7 +19,7 @@ $result = $conn->query($sql);
     <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
-        <a href="view_reservation.php">View Reservation </a>
+        <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
     </div>
 
@@ -36,6 +36,7 @@ $result = $conn->query($sql);
                     <th>Room Price</th>
                     <th>Adults</th>
                     <th>Children</th>
+                    <th>Total Cost</th>
                 </tr>
                 <?php while($row = $result->fetch_assoc()): ?>
                     <tr>
@@ -48,6 +49,7 @@ $result = $conn->query($sql);
                         <td><?php echo $row['room_price']; ?></td>
                         <td><?php echo $row['adults']; ?></td>
                         <td><?php echo $row['children']; ?></td>
+                        <td><?php echo '$' . number_format($row['total_cost'], 2); ?></td>
                     </tr>
                 <?php endwhile; ?>
             </table>
