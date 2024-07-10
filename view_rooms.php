@@ -75,21 +75,20 @@ $rooms = [
     <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
-        <a href="make_reservation.php">Make Reservation</a>
         <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
         <a href="change_room.php">Change Room</a>
     </div>
     <div class="room-descriptions">
-            <h2>Room Types and Descriptions</h2>
-            <ul>
-                <li><strong><?php echo RoomType::SINGLE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::SINGLE); ?></li>
-                <li><strong><?php echo RoomType::DOUBLE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::DOUBLE); ?></li>
-                <li><strong><?php echo RoomType::SUITE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::SUITE); ?></li>
-                <li><strong><?php echo RoomType::DELUXE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::DELUXE); ?></li>
-                <li><strong><?php echo RoomType::PRESIDENTIAL; ?>:</strong> <?php echo RoomType::getDescription(RoomType::PRESIDENTIAL); ?></li>
-            </ul>
-        </div>
+        <h2>Room Types and Descriptions</h2>
+        <ul>
+            <li><strong><?php echo RoomType::SINGLE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::SINGLE); ?></li>
+            <li><strong><?php echo RoomType::DOUBLE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::DOUBLE); ?></li>
+            <li><strong><?php echo RoomType::SUITE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::SUITE); ?></li>
+            <li><strong><?php echo RoomType::DELUXE; ?>:</strong> <?php echo RoomType::getDescription(RoomType::DELUXE); ?></li>
+            <li><strong><?php echo RoomType::PRESIDENTIAL; ?>:</strong> <?php echo RoomType::getDescription(RoomType::PRESIDENTIAL); ?></li>
+        </ul>
+    </div>
     <div class="container">
         <h2>Available Rooms</h2>
         <div class="rooms-list">
@@ -99,12 +98,11 @@ $rooms = [
                         <h3><?php echo htmlspecialchars($room['name']); ?></h3>
                         <p>Type: <?php echo htmlspecialchars($room['type']); ?></p>
                         <p>Price: $<?php echo htmlspecialchars($room['price']); ?> per night</p>
-                        <a href="make_reservation.php?room_id=<?php echo htmlspecialchars($room['id']); ?>&room_type=<?php echo htmlspecialchars($room['type']); ?>&room_price=<?php echo htmlspecialchars($room['price']); ?>" class="button">Make Reservation</a>
+                        <a href="make_reservation.php?room_id=<?php echo htmlspecialchars($room['id']); ?>&room_name=<?php echo htmlspecialchars($room['name']); ?>&room_type=<?php echo htmlspecialchars($room['type']); ?>&room_price=<?php echo htmlspecialchars($room['price']); ?>" class="button">Make Reservation</a>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
-        
     </div>
 </body>
 </html>
