@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 // Define a RoomType class to encapsulate room type information
 class RoomType {
@@ -27,7 +28,7 @@ class RoomType {
     }
 }
 
-// Simulated rooms data array
+// Simulated rooms data array with individual room IDs
 $rooms = [
     ['id' => 'room1', 'name' => 'Room 1', 'type' => RoomType::SINGLE, 'price' => 100],
     ['id' => 'room2', 'name' => 'Room 2', 'type' => RoomType::DOUBLE, 'price' => 150],
@@ -61,6 +62,32 @@ $rooms = [
     ['id' => 'room30', 'name' => 'Room 30', 'type' => RoomType::PRESIDENTIAL, 'price' => 800],
 ];
 
+// Retrieve reservations from session, initialize to empty array if not set
+$reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [];
+
+// Function to check if a room is available for a given date range
+function isRoomAvailable($roomId, $checkInDate, $checkOutDate) {
+    global $reservations;
+    
+    foreach ($reservations as $reservation) {
+        // Check if $reservation array has 'room_id' key
+        if (isset($reservation['room_id']) && $reservation['room_id'] === $roomId) {
+            $reservationCheckIn = strtotime($reservation['check_in_date']);
+            $reservationCheckOut = strtotime($reservation['check_out_date']);
+            $checkIn = strtotime($checkInDate);
+            $checkOut = strtotime($checkOutDate);
+
+            // Check for overlapping dates
+            if (($checkIn >= $reservationCheckIn && $checkIn < $reservationCheckOut) ||
+                ($checkOut > $reservationCheckIn && $checkOut <= $reservationCheckOut) ||
+                ($checkIn <= $reservationCheckIn && $checkOut >= $reservationCheckOut)) {
+                return false; // Room is not available
+            }
+        }
+    }
+
+    return true; // Room is available
+}
 ?>
 
 <!DOCTYPE html>
@@ -93,12 +120,33 @@ $rooms = [
         <h2>Available Rooms</h2>
         <div class="rooms-list">
             <?php foreach ($rooms as $room): ?>
+                <?php
+                    $roomId = $room['id'];
+                    $roomName = htmlspecialchars($room['name']);
+                    $roomType = htmlspecialchars($room['type']);
+                    $roomPrice = htmlspecialchars($room['price']);
+                    $availability = isRoomAvailable($roomId, date('Y-m-d'), date('Y-m-d', strtotime('+1 day')));
+                ?>
                 <div class="room">
                     <div class="room-details">
-                        <h3><?php echo htmlspecialchars($room['name']); ?></h3>
-                        <p>Type: <?php echo htmlspecialchars($room['type']); ?></p>
-                        <p>Price: $<?php echo htmlspecialchars($room['price']); ?> per night</p>
-                        <a href="make_reservation.php?room_id=<?php echo htmlspecialchars($room['id']); ?>&room_name=<?php echo htmlspecialchars($room['name']); ?>&room_type=<?php echo htmlspecialchars($room['type']); ?>&room_price=<?php echo htmlspecialchars($room['price']); ?>" class="button">Make Reservation</a>
+                        <h3><?php echo $roomName; ?></h3>
+                        <p>Type: <?php echo $roomType; ?></p>
+                        <p>Price: $<?php echo $roomPrice; ?> per night</p>
+                        <?php
+                            // Check if room is already reserved
+                            $isReserved = false;
+                            foreach ($reservations as $reservation) {
+                                if ($reservation['room_name'] === $roomName) {
+                                    $isReserved = true;
+                                    break;
+                                }
+                            }
+                        ?>
+                        <?php if ($availability && !$isReserved): ?>
+                            <a href="make_reservation.php?room_id=<?php echo $roomId; ?>&room_name=<?php echo $roomName; ?>&room_type=<?php echo $roomType; ?>&room_price=<?php echo $roomPrice; ?>" class="button">Make Reservation</a>
+                        <?php else: ?>
+                            <p class="unavailable">Not Available</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
