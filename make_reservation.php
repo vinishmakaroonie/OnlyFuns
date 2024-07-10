@@ -1,77 +1,30 @@
 <?php
-session_start();
+include 'db.php';
 
-// Function to generate transaction ID
-function generateTransactionID($customerName, $checkInDate, $roomType) {
-    $shortCustomerName = strtoupper(substr($customerName, 0, 2));
-    $month = strtoupper(date('M', strtotime($checkInDate)));
-    $day = date('d', strtotime($checkInDate));
-    $year = date('Y', strtotime($checkInDate));
-    $roomTypeCode = strtoupper(substr($roomType, 0, 3));
-
-    // Example format: THFEB100222-FIC00001
-    return "{$shortCustomerName}{$month}{$day}{$year}-{$roomTypeCode}00001"; // Replace with actual logic
-}
-
-// Initialize reservation saved status
 $reservationSaved = false;
 $message = '';
 
-// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and retrieve form data
-    $customerName = htmlspecialchars($_POST['customer_name']);
-    $checkInDate = htmlspecialchars($_POST['check_in_date']);
-    $checkOutDate = htmlspecialchars($_POST['check_out_date']);
-    $roomName = htmlspecialchars($_POST['room_name']);
-    $roomType = htmlspecialchars($_POST['room_type']);
-    $roomPrice = (float)htmlspecialchars($_POST['room_price']);
-    $adults = (int)$_POST['adults'];
-    $children = (int)$_POST['children'];
+    $customer_name = $_POST['customer_name'];
+    $check_in_date = $_POST['check_in_date'];
+    $check_out_date = $_POST['check_out_date'];
+    $room_name = $_POST['room_name'];
+    $room_type = $_POST['room_type'];
+    $room_price = $_POST['room_price'];
+    $adults = $_POST['adults'];
+    $children = $_POST['children'];
 
-    // Fee per head
-    $feePerHead = 10;
+    $sql = "INSERT INTO reservations (customer_name, check_in_date, check_out_date, room_name, room_type, room_price, adults, children)
+            VALUES ('$customer_name', '$check_in_date', '$check_out_date', '$room_name', '$room_type', '$room_price', '$adults', '$children')";
 
-    // Generate transaction ID
-    $transactionID = generateTransactionID($customerName, $checkInDate, $roomType);
-
-    // Calculate total cost based on room price and duration
-    $totalBaseCost = $roomPrice * (strtotime($checkOutDate) - strtotime($checkInDate)) / (60 * 60 * 24);
-
-    // Calculate additional fee for adults and children
-    $totalAdditionalFee = ($adults + $children) * $feePerHead;
-
-    // Apply discount for children
-    if ($children > 0) {
-        $discountPercentage = 10; // Example discount percentage
-        $discountAmount = $totalBaseCost * ($discountPercentage / 100);
-        $totalBaseCost -= $discountAmount;
+    if ($conn->query($sql) === TRUE) {
+        $reservationSaved = true;
+        $message = "Reservation made successfully.";
+    } else {
+        $message = "Error: " . $sql . "<br>" . $conn->error;
     }
 
-    // Total cost including additional fee
-    $total = $totalBaseCost + $totalAdditionalFee;
-
-    // Save reservation to session
-    $newReservation = [
-        'customer_name' => $customerName,
-        'check_in_date' => $checkInDate,
-        'check_out_date' => $checkOutDate,
-        'room_name' => $roomName,
-        'room_type' => $roomType,
-        'room_price' => $roomPrice,
-        'adults' => $adults,
-        'children' => $children,
-        'total' => $total,
-        'transaction_id' => $transactionID // Ensure transaction ID is stored
-    ];
-    
-    if (!isset($_SESSION['reservations'])) {
-        $_SESSION['reservations'] = [];
-    }
-    $_SESSION['reservations'][] = $newReservation;
-
-    $reservationSaved = true;
-    $message = "Reservation confirmed! Transaction ID: $transactionID";
+    $conn->close();
 }
 ?>
 
@@ -81,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make Reservation</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="make_reservation.css">
     <script>
     function calculateTotal() {
         const checkInDate = document.getElementById('check_in_date').value;
@@ -95,25 +48,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             let totalBaseCost = roomPrice * diffDays;
 
-            // Fetch number of children and adults
             const children = parseInt(document.getElementById('children').value);
             const adults = parseInt(document.getElementById('adults').value);
 
-            // Calculate total additional fee
             const feePerHead = 10;
             const totalAdditionalFee = (children + adults) * feePerHead;
 
-            // Apply discount for children
             if (children > 0) {
-                const discountPercentage = 10; // Example discount percentage
+                const discountPercentage = 10;
                 const discountAmount = totalBaseCost * (discountPercentage / 100);
                 totalBaseCost -= discountAmount;
             }
 
-            // Total cost including additional fee
             const totalCost = totalBaseCost + totalAdditionalFee;
 
-            // Update the displayed total with formatted currency
             const formattedTotal = totalCost.toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'USD'
@@ -132,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.getElementById('children').addEventListener('change', calculateTotal);
         document.getElementById('adults').addEventListener('change', calculateTotal);
     });
-</script>
+    </script>
 </head>
 <body>
     <h1>OnlyFuns Hotel Reservation</h1>
@@ -141,7 +89,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="view_rooms.php">View Rooms</a>
         <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
-        <a href="change_room.php">Change Room</a>
     </div>
 
     <div class="container">
@@ -183,8 +130,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <p><?php echo $message; ?></p>
             </div>
         <?php endif; ?>
-    </div>
 
-    <a href="index.php">Go Back</a>
+        <div class="go-back">
+            <a href="index.php" class="button">Go Back</a>
+        </div>
+    </div>
 </body>
 </html>
