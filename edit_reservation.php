@@ -1,5 +1,32 @@
 <?php
 session_start();
+include 'db.php';
+
+$message = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['reservation_id'])) {
+        $reservation_id = $_POST['reservation_id'];
+        
+        // Sanitize input to prevent SQL injection
+        $reservation_id = intval($reservation_id);
+
+        $sql = "DELETE FROM reservations WHERE id = $reservation_id";
+
+        if ($conn->query($sql) === TRUE) {
+            $message = "Reservation canceled successfully.";
+        } else {
+            $message = "Error canceling reservation: " . $conn->error;
+        }
+    } else {
+        $message = "Reservation ID not provided.";
+    }
+}
+
+$sql = "SELECT * FROM reservations";
+$result = $conn->query($sql);
+
+$conn->close();
 
 // Retrieve reservations from session
 $reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [];
@@ -84,7 +111,7 @@ if (isset($_GET['transaction_id'])) {
 <head>
     <meta charset="UTF-8">
     <title>Edit Reservation</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="edit_reservation.css">
     <script>
         function calculateTotal() {
             const checkInDate = document.getElementById('check_in_date').value;
@@ -134,7 +161,6 @@ if (isset($_GET['transaction_id'])) {
         <a href="view_rooms.php">View Rooms</a>
         <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
-        <a href="change_room.php">Change Room</a>
     </div>
     <div class="container">
         <h2>Edit Reservation Details</h2>
