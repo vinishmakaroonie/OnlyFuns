@@ -14,13 +14,12 @@ $reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [
     <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
-        <a href="make_reservation.php">Make Reservation</a>
-        <a href="view_reservations.php">View Reservation</a>
+        <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
         <a href="change_room.php">Change Room</a>
     </div>
     <div class="container">
-        <h1>Reservation History</h1>
+        <h2>Reservation History</h2>
         <ul class="reservation-list">
             <?php if (!empty($reservations)): ?>
                 <?php foreach ($reservations as $reservation): ?>
@@ -32,6 +31,8 @@ $reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [
                             <p><strong>Check-in Date:</strong> <?php echo htmlspecialchars($reservation['check_in_date']); ?></p>
                             <p><strong>Check-out Date:</strong> <?php echo htmlspecialchars($reservation['check_out_date']); ?></p>
                             <p><strong>Total:</strong> $<?php echo number_format($reservation['total'], 2); ?></p>
+                            <p><strong>Adults:</strong> <?php echo htmlspecialchars($reservation['adults']); ?></p>
+                            <p><strong>Children:</strong> <?php echo htmlspecialchars($reservation['children']); ?></p>
                         </div>
                     </li>
                 <?php endforeach; ?>
