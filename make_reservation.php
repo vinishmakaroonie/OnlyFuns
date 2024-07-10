@@ -23,35 +23,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $customerName = htmlspecialchars($_POST['customer_name']);
     $checkInDate = htmlspecialchars($_POST['check_in_date']);
     $checkOutDate = htmlspecialchars($_POST['check_out_date']);
+    $roomName = htmlspecialchars($_POST['room_name']);
     $roomType = htmlspecialchars($_POST['room_type']);
+    $roomPrice = (float)htmlspecialchars($_POST['room_price']);
     $adults = (int)$_POST['adults'];
     $children = (int)$_POST['children'];
 
     // Generate transaction ID
     $transactionID = generateTransactionID($customerName, $checkInDate, $roomType);
 
-    // Calculate total cost (for simplicity, using a fixed rate per room type)
-    $roomPrices = [
-        'Single' => 100,
-        'Double' => 150,
-        'Suite' => 200,
-        'Deluxe' => 250,
-        'Presidential' => 500,
-    ];
-    $total = $roomPrices[$roomType] * (strtotime($checkOutDate) - strtotime($checkInDate)) / (60 * 60 * 24);
+    // Calculate total cost
+    $total = $roomPrice * (strtotime($checkOutDate) - strtotime($checkInDate)) / (60 * 60 * 24);
+
+    // Apply discount for children
+    if ($children > 0) {
+        $discountPercentage = 10; // Example discount percentage
+        $discountAmount = $total * ($discountPercentage / 100);
+        $total -= $discountAmount;
+    }
 
     // Save reservation to session
     $newReservation = [
         'customer_name' => $customerName,
         'check_in_date' => $checkInDate,
         'check_out_date' => $checkOutDate,
+        'room_name' => $roomName,
         'room_type' => $roomType,
+        'room_price' => $roomPrice,
         'adults' => $adults,
         'children' => $children,
         'total' => $total,
-        'transaction_id' => $transactionID
+        'transaction_id' => $transactionID // Ensure transaction ID is stored
     ];
-
+    
     if (!isset($_SESSION['reservations'])) {
         $_SESSION['reservations'] = [];
     }
@@ -69,14 +73,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make Reservation</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+    function calculateTotal() {
+        const checkInDate = document.getElementById('check_in_date').value;
+        const checkOutDate = document.getElementById('check_out_date').value;
+        const roomPrice = parseFloat(document.getElementById('room_price').value);
+
+        if (checkInDate && checkOutDate && !isNaN(roomPrice)) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+            const diffTime = Math.abs(checkOut - checkIn);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            let totalCost = roomPrice * diffDays;
+
+            // Fetch number of children
+            const children = parseInt(document.getElementById('children').value);
+
+            // Apply discount for children
+            if (children > 0) {
+                const discountPercentage = 10; // Example discount percentage
+                const discountAmount = totalCost * (discountPercentage / 100);
+                totalCost -= discountAmount;
+            }
+
+            // Update the displayed total with formatted currency
+            const formattedTotal = totalCost.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            });
+
+            document.getElementById('total').innerText = `Total: ${formattedTotal}`;
+        } else {
+            document.getElementById('total').innerText = '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        calculateTotal();
+        document.getElementById('check_in_date').addEventListener('change', calculateTotal);
+        document.getElementById('check_out_date').addEventListener('change', calculateTotal);
+        document.getElementById('children').addEventListener('change', calculateTotal);
+    });
+</script>
 </head>
 <body>
     <h1>OnlyFuns Hotel Reservation</h1>
     <div class="navigation">
         <a href="index.php">Home</a>
         <a href="view_rooms.php">View Rooms</a>
-        <a href="make_reservation.php">Make Reservation</a>
-        <a href="view_reservations.php">View Reservation</a>
+        <a href="view_reservations.php">View Reservations</a>
         <a href="cancel_reservation.php">Cancel Reservation</a>
         <a href="change_room.php">Change Room</a>
     </div>
@@ -93,20 +138,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="check_out_date">Check-out Date:</label>
                 <input type="date" id="check_out_date" name="check_out_date" required>
 
+                <label for="room_name">Room Number:</label>
+                <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($_GET['room_name'] ?? ''); ?>" readonly>
+
                 <label for="room_type">Room Type:</label>
-                <select id="room_type" name="room_type" required>
-                    <option value="Single">Single</option>
-                    <option value="Double">Double</option>
-                    <option value="Suite">Suite</option>
-                    <option value="Deluxe">Deluxe</option>
-                    <option value="Presidential">Presidential</option>
-                </select>
+                <input type="text" id="room_type" name="room_type" value="<?php echo htmlspecialchars($_GET['room_type'] ?? ''); ?>" readonly>
+
+                <label for="room_price">Room Price:</label>
+                <input type="text" id="room_price" name="room_price" value="<?php echo htmlspecialchars($_GET['room_price'] ?? ''); ?>" readonly>
 
                 <label for="adults">Number of Adults:</label>
                 <input type="number" id="adults" name="adults" required>
 
                 <label for="children">Number of Children:</label>
                 <input type="number" id="children" name="children" required>
+
+                <div id="total"></div>
 
                 <input type="submit" value="Confirm Reservation">
             </form>
