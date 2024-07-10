@@ -1,0 +1,142 @@
+/* Resetting default margins and paddings */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('images/backgroundisreal.jpg') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    color: #fff;
+}
+
+/* Centering main content and providing a container */
+.container {
+    width: 35%;
+    margin: auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    color: #333;
+}
+
+/* Styling for navigation bar */
+.navigation {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.navigation a {
+    color: #fff;
+    margin: 0 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.navigation a:hover {
+    color: #FFD700;
+}
+
+/* Styling for headings */
+h1, h2 {
+    color: #333;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* Styling for forms */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+form select {
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #555;
+}
+
+/* Styling for messages */
+.message {
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Styling for buttons */
+.button {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for "Back to Reservations" button */
+.back-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #218838;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .navigation {
+        flex-direction: column;
+    }
+
+    .navigation a {
+        margin: 10px 0;
+    }
+}

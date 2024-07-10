@@ -1,0 +1,176 @@
+/* Resetting default margins and paddings */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('images/backgroundisreal.jpg') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    color: #fff;
+}
+
+/* Centering main content and providing a container */
+.container {
+    width: 50%; /* Increase width for a larger container */
+    margin: auto;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 50px; /* Adjusted margin top */
+}
+
+/* Styling for headings */
+h1 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 32px; /* Increased font size for headings */
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 32px; /* Increased font size for headings */
+}
+
+/* Styling for navigation bar */
+.navigation {
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px; /* Increased margin bottom */
+}
+
+.navigation a {
+    color: #fff;
+    margin: 0 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.navigation a:hover {
+    color: #FFD700;
+}
+
+/* Styling for form elements */
+.reservation-form {
+    max-width: 300px; /* Increased max-width for a wider form */
+    margin: auto;
+    padding: 30px; /* Increased padding */
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Align form elements to the left */
+}
+
+.reservation-form label {
+    display: block;
+    margin-bottom: 12px; /* Increased margin bottom for labels */
+    color: #333;
+    font-size: 18px; /* Increased label font size */
+}
+
+.reservation-form input[type="text"],
+.reservation-form input[type="date"],
+.reservation-form input[type="number"],
+.reservation-form select {
+    width: 100%;
+    padding: 14px; /* Increased padding for inputs */
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 18px; /* Increased font size for inputs */
+    box-sizing: border-box; /* Ensures padding does not increase element width */
+}
+
+.reservation-form input[type="submit"] {
+    display: inline-block;
+    padding: 14px 24px; /* Increased padding for submit button */
+    background-color: #4CAF50;
+    color: #333;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    font-size: 18px; /* Increased font size for submit button */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reservation-form input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Styling for room listings */
+.rooms-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 30px; /* Increased margin top */
+    text-align: center;
+}
+
+.room-descriptions {
+    background-color: #333;
+    border-radius: 8px;
+    padding: 30px; /* Increased padding */
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 40px; /* Increased margin top */
+    text-align: center;
+}
+
+.room-descriptions h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 28px; /* Increased heading font size */
+}
+
+.room-descriptions ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+.room-descriptions li {
+    margin-bottom: 12px; /* Increased margin bottom for list items */
+    font-size: 18px; /* Increased font size for list items */
+}
+
+.room-descriptions li strong {
+    color: #4CAF50;
+    margin-right: 12px; /* Adjusted margin right for strong elements */
+}
+
+.room-details {
+    padding: 30px; /* Increased padding */
+}
+
+.room-details h3 {
+    margin-top: 0;
+    font-size: 20px; /* Increased font size for room details headings */
+    color: #080808;
+}
+
+.room-details p {
+    margin: 10px 0; /* Adjusted margin */
+    font-size: 16px; /* Increased font size for room details text */
+    color: #2b2929;
+}
+
+.room-details .button {
+    display: inline-block;
+    padding: 12px 24px; /* Increased padding for buttons */
+    background-color: #4CAF50;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 14px; /* Increased margin top */
+    transition: background-color 0.3s;
+}
+
+.room-details .button:hover {
+    background-color: #45a049;
+}

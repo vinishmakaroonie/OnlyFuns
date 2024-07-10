@@ -1,0 +1,148 @@
+/* Resetting default margins and paddings */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    background: url('images/reservationrealbackground.avif') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Heading styles */
+h1 {
+    text-align: center;
+    padding: 20px 0;
+    color: #fff;
+    margin: 0;
+}
+
+/* Styling for navigation bar */
+.navigation {
+    display: flex;
+    justify-content: center;
+    background-color: transparent(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.navigation a {
+    color: #fff;
+    margin: 0 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.navigation a:hover {
+    color: #FFD700;
+}
+
+/* Styling for headings */
+h1, h2 {
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 30px; /* Increased padding for a more spacious feel */
+    border-radius: 8px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    position: relative; /* Ensure the container is relative for absolute positioning */
+}
+
+.reservation-form {
+    margin-bottom: 20px;
+}
+
+.reservation-form label {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.reservation-form input[type="text"],
+.reservation-form input[type="date"],
+.reservation-form input[type="number"],
+.reservation-form input[type="submit"] {
+    width: calc(100% - 22px); /* Adjusted width to account for border */
+    padding: 12px; /* Increased padding for better touch targets */
+    margin-top: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.reservation-form input[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reservation-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#total {
+    font-size: 20px; /* Increased font size for total */
+    font-weight: bold;
+    margin-top: 15px; /* Adjusted margin top */
+}
+
+.reservation-result {
+    background-color: #fff;
+    padding: 30px; /* Increased padding */
+    border-radius: 8px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.reservation-result h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 24px; /* Increased font size for result heading */
+}
+
+.reservation-result p {
+    font-size: 18px;
+    color: #007BFF;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px; /* Increased padding for smaller screens */
+    }
+
+    .reservation-form input[type="text"],
+    .reservation-form input[type="date"],
+    .reservation-form input[type="number"],
+    .reservation-form input[type="submit"] {
+        width: 100%;
+    }
+}
+
+.go-back {
+    text-align: center;
+    margin-top: 20px; /* Adjusted margin for spacing */
+}
+
+.go-back .button {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.go-back .button:hover {
+    background-color: #0056b3;
+}
