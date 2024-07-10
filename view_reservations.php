@@ -27,6 +27,7 @@ $reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [
                         <div class="reservation-details">
                             <p><strong>Reservation ID:</strong> <?php echo htmlspecialchars($reservation['transaction_id']); ?></p>
                             <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($reservation['customer_name']); ?></p>
+                            <p><strong>Room Number:</strong> <?php echo htmlspecialchars($reservation['room_name']); ?></p>
                             <p><strong>Room Type:</strong> <?php echo htmlspecialchars($reservation['room_type']); ?></p>
                             <p><strong>Check-in Date:</strong> <?php echo htmlspecialchars($reservation['check_in_date']); ?></p>
                             <p><strong>Check-out Date:</strong> <?php echo htmlspecialchars($reservation['check_out_date']); ?></p>
