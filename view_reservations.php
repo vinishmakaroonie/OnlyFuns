@@ -33,6 +33,7 @@ $reservations = isset($_SESSION['reservations']) ? $_SESSION['reservations'] : [
                             <p><strong>Total:</strong> $<?php echo number_format($reservation['total'], 2); ?></p>
                             <p><strong>Adults:</strong> <?php echo htmlspecialchars($reservation['adults']); ?></p>
                             <p><strong>Children:</strong> <?php echo htmlspecialchars($reservation['children']); ?></p>
+                            <a href="edit_reservation.php?transaction_id=<?php echo htmlspecialchars($reservation['transaction_id']); ?>" class="button">Edit</a>
                         </div>
                     </li>
                 <?php endforeach; ?>
