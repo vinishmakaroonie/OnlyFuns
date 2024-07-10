@@ -4,6 +4,7 @@ include 'db.php';
 
 $message = '';
 
+
 // Function to calculate cancellation penalty based on days difference
 function calculateCancellationPenalty($check_in_date, $check_out_date, $room_price) {
     $checkIn = new DateTime($check_in_date);
