@@ -29,18 +29,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $adults = (int)$_POST['adults'];
     $children = (int)$_POST['children'];
 
+    // Fee per head
+    $feePerHead = 10;
+
     // Generate transaction ID
     $transactionID = generateTransactionID($customerName, $checkInDate, $roomType);
 
-    // Calculate total cost
-    $total = $roomPrice * (strtotime($checkOutDate) - strtotime($checkInDate)) / (60 * 60 * 24);
+    // Calculate total cost based on room price and duration
+    $totalBaseCost = $roomPrice * (strtotime($checkOutDate) - strtotime($checkInDate)) / (60 * 60 * 24);
+
+    // Calculate additional fee for adults and children
+    $totalAdditionalFee = ($adults + $children) * $feePerHead;
 
     // Apply discount for children
     if ($children > 0) {
         $discountPercentage = 10; // Example discount percentage
-        $discountAmount = $total * ($discountPercentage / 100);
-        $total -= $discountAmount;
+        $discountAmount = $totalBaseCost * ($discountPercentage / 100);
+        $totalBaseCost -= $discountAmount;
     }
+
+    // Total cost including additional fee
+    $total = $totalBaseCost + $totalAdditionalFee;
 
     // Save reservation to session
     $newReservation = [
@@ -84,17 +93,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             const checkOut = new Date(checkOutDate);
             const diffTime = Math.abs(checkOut - checkIn);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            let totalCost = roomPrice * diffDays;
+            let totalBaseCost = roomPrice * diffDays;
 
-            // Fetch number of children
+            // Fetch number of children and adults
             const children = parseInt(document.getElementById('children').value);
+            const adults = parseInt(document.getElementById('adults').value);
+
+            // Calculate total additional fee
+            const feePerHead = 10;
+            const totalAdditionalFee = (children + adults) * feePerHead;
 
             // Apply discount for children
             if (children > 0) {
                 const discountPercentage = 10; // Example discount percentage
-                const discountAmount = totalCost * (discountPercentage / 100);
-                totalCost -= discountAmount;
+                const discountAmount = totalBaseCost * (discountPercentage / 100);
+                totalBaseCost -= discountAmount;
             }
+
+            // Total cost including additional fee
+            const totalCost = totalBaseCost + totalAdditionalFee;
 
             // Update the displayed total with formatted currency
             const formattedTotal = totalCost.toLocaleString('en-US', {
@@ -113,6 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.getElementById('check_in_date').addEventListener('change', calculateTotal);
         document.getElementById('check_out_date').addEventListener('change', calculateTotal);
         document.getElementById('children').addEventListener('change', calculateTotal);
+        document.getElementById('adults').addEventListener('change', calculateTotal);
     });
 </script>
 </head>
